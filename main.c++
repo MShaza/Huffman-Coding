@@ -31,10 +31,13 @@ struct Comparator{
 
 void Huffman_Encoding(const string& text);
 void Generate_Codes(Node *root, const string& str, unordered_map<char, string>& huffmanCode);
+string Huffman_Decoding(Node *root, string &encodedText);
+
 
 int main(){
    const string text = "abacdbabdbbaccd";
     Huffman_Encoding(text);
+   
     
 }
 /**
@@ -87,6 +90,8 @@ void Huffman_Encoding(const string& text){
         encodedText += huffmanCode[ch];
     }
     cout << "\nEncoded text:\n" << encodedText << '\n';
+    string decodedText = Huffman_Decoding(root, encodedText);
+     cout << "\nDecoded text:\n" << decodedText << '\n';
 }
 /**
  * @function Name   Generate_Codes
@@ -103,4 +108,18 @@ void Generate_Codes(Node *root, const string& str, unordered_map<char, string>& 
     Generate_Codes(root->left, str + "0", huffmanCode );
     Generate_Codes(root->right, str + "1", huffmanCode );
 }
-
+string Huffman_Decoding(Node *root, string &encodedText){
+    string decodedText = "";
+    Node* currentNode = root;
+    if(root == nullptr){
+        return "Empty";
+    }
+    for(char bits : encodedText){
+        currentNode = (bits == '0') ? currentNode->left : currentNode->right;
+        if(!currentNode->left && !currentNode->right){
+            decodedText += currentNode->textChar;
+            currentNode = root;
+        }
+    }
+    return decodedText;
+}
